@@ -14,8 +14,9 @@ public class LongChipCompetition {
     private ArrayList<Beatle> theBeatles = new ArrayList<Beatle>();
 
     public static void main(String[] args) {
-        LongChipCompetition lcc = new LongChipCompetition();
-
+        
+    	LongChipCompetition lcc = new LongChipCompetition();
+    	lcc.initializeBeatles();
     }
 
     private void initializeBeatles() {
