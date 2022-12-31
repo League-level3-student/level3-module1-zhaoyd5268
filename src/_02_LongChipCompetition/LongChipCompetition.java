@@ -13,10 +13,27 @@ public class LongChipCompetition {
      */
     private ArrayList<Beatle> theBeatles = new ArrayList<Beatle>();
 
-    public static void main(String[] args) {
-        
+    public static void main(String[] args) {      
     	LongChipCompetition lcc = new LongChipCompetition();
     	lcc.initializeBeatles();
+    	String mostChips = "none";
+    	ArrayList<Chip> beatle0 = lcc.theBeatles.get(0).getChips();
+    	ArrayList<Chip> beatle1 = lcc.theBeatles.get(1).getChips();
+    	ArrayList<Chip> beatle2 = lcc.theBeatles.get(2).getChips();
+    	ArrayList<Chip> beatle3 = lcc.theBeatles.get(3).getChips();
+		if(beatle0.size() > beatle1.size() && beatle0.size() > beatle2.size() && beatle0.size() > beatle3.size()) {
+			mostChips = "George";
+		}
+		if(beatle1.size() > beatle0.size() && beatle1.size() > beatle2.size() && beatle1.size() > beatle3.size()) {
+			mostChips = "John";
+		}
+		if(beatle2.size() > beatle1.size() && beatle2.size() > beatle0.size() && beatle2.size() > beatle3.size()) {
+			mostChips = "Paul";
+		}
+		if(beatle3.size() > beatle1.size() && beatle3.size() > beatle2.size() && beatle3.size() > beatle0.size()) {
+			mostChips = "Ringo";
+		}
+		System.out.println("The beatles member with the most chips is " + mostChips);
     }
 
     private void initializeBeatles() {
