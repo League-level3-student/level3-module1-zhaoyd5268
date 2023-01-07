@@ -49,9 +49,12 @@ public class GameBoard extends JFrame implements ActionListener {
         //    Also, add action listeners to each Card object and then add each
         //    of the Card objects to the ArrayList of Cards.
         for(int i = 0; i < TOTAL_CARDS; i++) {
-        	Card card = new Card(1);
-        	card.addActionListener(this);
-        	cards.add(card);
+        	for(int j = 0; j < 4; j++) {
+            	Card card = new Card(i+1);
+            	card.addActionListener(this);
+            	cards.add(card);
+            	card.setFaceUpIcon(Card.cardImagesPath + (i+1) + ".png");
+        	}
         }
         
         // 4. Use Collections.shuffle() method to randomize the order of
