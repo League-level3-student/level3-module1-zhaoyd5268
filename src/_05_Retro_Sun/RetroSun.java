@@ -1,5 +1,9 @@
 package _05_Retro_Sun;
 
+import java.awt.Color;
+import java.util.ArrayList;
+import java.util.Random;
+
 import processing.core.PApplet;
 
 /*
@@ -9,17 +13,15 @@ import processing.core.PApplet;
  * see final image and what each step should look like.
  */
 public class RetroSun extends PApplet {
-	static final int WIDTH = 800;
-	static final int HEIGHT = 600;
+	static final int WIDTH = 1000;
+	static final int HEIGHT = 1000;
 	float x = 150;
-	float y = width / 2;
-	float y1 = y-100;
-	float y2 = y1-100;
-	float y3 = y2-100;
-	float y4 = y3-100;
+	float y = 750;
 	float w = 750;
-	float h = 40;
-	Rectangle[] rect = new Rectangle[4];
+	float h = 50;
+	ArrayList <Rectangle> rects = new ArrayList <Rectangle>();
+	ArrayList <Star> stars = new ArrayList <Star>();
+	Reflection rf = new Reflection(250, 6, 178, 800, 1);
 	// RGB colors
 	int[] sunColors = { color(212, 202, 11), color(214, 198, 30), color(211, 170, 26), color(216, 157, 51),
 			color(217, 124, 64), color(213, 104, 81), color(212, 51, 98), color(215, 29, 121), color(217, 11, 139),
@@ -30,14 +32,20 @@ public class RetroSun extends PApplet {
 	@Override
 	public void settings() {
 		// 1. Set the size of your sketch to at least 800 width, 600 height
-		setSize(1000, 800);
+		setSize(1000, 1000);
 	}
 
 	@Override
 	public void setup() {
 		// 2. Set bgColor as the background color
 		background(bgColor);
-		
+		for(int i = 0; i < 6; i++) {
+		rects.add(new Rectangle(x, y + i*99, w, h));
+		}
+		Random ran = new Random();
+		for(int i = 0; i < 200; i++) {
+		stars.add(new Star(ran.nextInt(WIDTH), ran.nextInt(HEIGHT), new Color(255,255,255)));
+		}
 	}
 
 	@Override
@@ -45,7 +53,10 @@ public class RetroSun extends PApplet {
 		/*
 		 * PART 1: Drawing the sun
 		 */
-
+		background(bgColor);
+		for(int i = 0; i < 200; i++) {
+			stars.get(i).draw();
+		}
 		// Draw an ellipse for the sun in the center of the window
 		// Use fill(sunColors[0]) to make it yellow
 		// Use noStroke() to remove the black outline
@@ -60,7 +71,7 @@ public class RetroSun extends PApplet {
 		 *
 		 * This will make the sun have gradually different colors from the top to bottom
 		 */
-
+		
 		// Call the loadPixels() method to put all the pixel colors into
 		// the pixels[] array
 		// https://processing.org/reference/loadPixels_.html
@@ -116,10 +127,16 @@ public class RetroSun extends PApplet {
 		// float x = sunCenterX - sunRadius
 		// *The width can be 2 times the radius
 		// float w = 2 * sunRadius
-
+		for(int i = 0; i < rects.size(); i++) {
 		fill(bgColor);
-		rect(x, y, w, h);
-
+		rect(rects.get(i).x, rects.get(i).y, rects.get(i).w, rects.get(i).h);
+		rects.get(i).y-=3;
+		if (rects.get(i).y < 150) {
+			rects.get(i).y = 750;
+		}
+		rects.get(i).h = map(rects.get(i).y, 150, 700, 1, 40);
+		
+		}
 		// Do you see a section missing from the sun like in the 3rd image?
 
 		/*
@@ -132,7 +149,8 @@ public class RetroSun extends PApplet {
 		// Decrease the y variable of the rectangular section created in PART 3.
 		// If there isn't a variable, declare a float variable OUTSIDE of the
 		// draw function AND initialize it in the setup() function.
-		
+			
+
 		// Do you see the rectangle moving upwards?
 
 		// Pick a y positon to be the location when the sections stop moving up.
@@ -148,7 +166,7 @@ public class RetroSun extends PApplet {
 		// Adjust the amount to decrease so that it disappears close to the top.
 		// HINT: You can use the map() function again,
 		// h = map(y, missingSectionTopY, missingSectionBottomY, 1, 40);
-			h = map(y, 150, 700, 1, 40);
+
 		// The map() function will make the value of h = 1 if y is at the top,
 		// and h = 40 if y is at the bottom.
 
@@ -162,13 +180,16 @@ public class RetroSun extends PApplet {
 		// code you wrote for the 1 missing sun section.
 		// HINT: You can use the Rectangle class defined below to create
 		// a list of Rectangles.
-
+			
 		/*
 		 * PART 6: Adding extras
 		 *
 		 * If you want to make your retro sun look more unique, try adding reflections
 		 * and stars. See RetroSun.html in this folder for some example classes
 		 */
+		fill(1, 1, 74);
+		rect(0, 800, 1000, 200);
+		rf.draw();
 	}
 
 	static public void main(String[] passedArgs) {
@@ -206,5 +227,138 @@ public class RetroSun extends PApplet {
 			this.w = w;
 			this.h = h;
 		}
+	}
+	class Star {
+		  int x;
+		  int y;
+		  Color starColor;
+		  float startAlpha;
+		  float alpha;
+		  float diameter;
+
+		  Star(int x, int y, Color col) {
+		    this.x = x;
+		    this.y = y;
+		    starColor = col;
+		    this.diameter = random(0.1f, 3);
+		    this.startAlpha = random(1, 200);
+		    this.alpha = startAlpha;
+		  }
+		  
+		  void setAlpha(int alpha){
+		    this.alpha = constrain(alpha, startAlpha, 255);
+		  }
+
+		  void draw() {
+		    noStroke();
+		    fill(starColor.getRGB(), alpha);
+		    float blink = random(0, 0.8f);
+		    ellipse(x, y, diameter + blink, diameter + blink);
+		  }
+	}
+	class Reflection {
+		/*
+		  // HSB colors
+		  color[] barColors = {
+		    color(285, 96.6, 23.1), 
+		    color(312, 100, 42.7), 
+		    color(340, 66.9, 60.4), 
+		    color(11, 60.8, 62), 
+		    color(340, 66.9, 60.4), 
+		    color(312, 100, 42.7), 
+		    color(285, 96.6, 23.1)
+		  };
+		*/
+		  // RGB colors
+		 int[] barColors = {
+		    color(45, 2, 59), 
+		    color(109, 0, 88), 
+		    color(154, 51, 86), 
+		    color(158, 79, 62), 
+		    color(154, 51, 86), 
+		    color(109, 0, 88), 
+		    color(45, 2, 59)
+		  };
+
+		  int sunRadius;
+		  int numReflectionBars;
+		  int topX;
+		  int topY;
+		  int topWidth;
+		  int bottomY;
+		  int maxHeight;
+		  float speed;
+		  ArrayList <Rectangle> lowerBars;
+		  
+		  Reflection(int sunRadius, int numBars, int topX, int topY, float speed){
+		    this.sunRadius = sunRadius;
+		    this.topX = topX;
+		    this.topY = topY;
+		    this.speed = speed;
+
+		    initialize(numBars);
+		  }
+		  
+		  void initialize(int numBars){
+		    this.numReflectionBars = numBars;
+		    
+		    topWidth = 2 * (sunRadius + sunRadius/3);
+		    maxHeight = 10;
+		    bottomY = topY + (numBars * 2 * maxHeight);
+		    lowerBars = new ArrayList <Rectangle> ();
+		    
+		    // Setup bottom relection bars
+		    int x = topX;
+		    int y = topY;
+		    int w = topWidth;
+		    int h = maxHeight;
+		    for ( int i = 0; i < numReflectionBars; i++ ) {   
+		      y += (bottomY - topY) / numBars;
+		      x += sunRadius / 16;
+		      w -= 2 * (sunRadius / 16);
+
+		      Rectangle r = new Rectangle(x, y, w, h);
+		      lowerBars.add(r);
+		    }
+		  }
+		  
+		  void draw() {
+		    strokeWeight(1);
+		    
+		    for ( Rectangle bar : lowerBars ) {
+		      for ( int i = (int)bar.x; i < bar.x + bar.w; i++ ) {
+		        float alphaMax = -255 - (bar.y - topY);
+		        float alphaMin =  255 + (bar.y - topY);
+		        float alpha = map(i, bar.x, bar.x + bar.w, alphaMin, alphaMax);
+		        float step = map(i, bar.x, bar.x + bar.w, 0, 1);
+		        int lc = interpolateColor(barColors, step);
+		    
+		        stroke(lc, 255 - abs(alpha));
+		        line(i, bar.y, i, bar.y + bar.h);
+		      }
+		      
+		      bar.y += speed;
+		      bar.x += speed;
+		      bar.w -= 2 * speed;
+
+		      if( bar.y > bottomY ) {
+		        // Bar at bottom, reset to top
+		        
+		        bar.x = topX;
+		        bar.y = topY + maxHeight;
+		        bar.w = topWidth;
+		        bar.h = 1;
+		      } else if( bar.y > bottomY - maxHeight ) {
+		        // Bar near bottom
+		        
+		        bar.h -= speed;
+		      } else if( bar.h < maxHeight ) {
+		        // Bar height just reset and at top
+		        
+		        bar.y -= speed;
+		        bar.h += speed;
+		      }
+		    }
+		  }
 	}
 }
