@@ -28,7 +28,6 @@ import java.util.HashMap;
  */
 
 public class CaliforniaWeather {
-    
     void start() {
         HashMap<String, WeatherData> weatherData = Utilities.getWeatherData();
         

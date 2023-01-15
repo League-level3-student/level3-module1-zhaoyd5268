@@ -12,7 +12,7 @@ import javax.swing.JPanel;
 
 public class _02_LogSearch implements ActionListener {
 	HashMap <Integer, String> stuff = new HashMap <Integer, String> ();
-
+	String list = "";
 	JFrame frame = new JFrame();
 	JPanel panel = new JPanel();
     JButton AddEntry = new JButton();
@@ -30,7 +30,8 @@ public class _02_LogSearch implements ActionListener {
 		IDSearch.addActionListener(this);
 		ListView.addActionListener(this);
 		frame.setVisible(true);
-	
+		frame.pack();
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
 
 
@@ -64,9 +65,10 @@ public class _02_LogSearch implements ActionListener {
 		
 		if (button.equals(ListView)) {
 		for(Integer i : stuff.keySet()) {
-			JOptionPane.showMessageDialog(null, "ID:  " + i + "  Name:  " + stuff.get(i) );
+			list += "ID:  " + i + "  Name:  " + stuff.get(i) + "\n";
+			
 		}
-		
+			JOptionPane.showMessageDialog(null, list);
 			
 		}
 	}
