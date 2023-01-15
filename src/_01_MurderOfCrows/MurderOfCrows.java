@@ -3,7 +3,7 @@ package _01_MurderOfCrows;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class MurderOfCrows {
+public class MurderOfCrows { 
 
     ArrayList<Crow> theMurder = new ArrayList<Crow>();
 
